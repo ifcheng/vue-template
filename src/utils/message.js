@@ -5,11 +5,7 @@ const msgOptions = {}
 
 export default {
   alert(message, options) {
-    return MessageBox.alert({
-      title: '提示',
-      message,
-      ...options
-    })
+    return MessageBox.alert(message, '提示', options)
   },
 
   confirm(message, type, options) {
@@ -17,9 +13,7 @@ export default {
       options = type
       type = undefined
     }
-    return MessageBox.confirm({
-      title: '提示',
-      message,
+    return MessageBox.confirm(message, '提示', {
       type,
       ...options
     })

@@ -1,5 +1,6 @@
 import axios from 'axios'
 import Message from '../utils/message'
+import Loading from '../utils/loading'
 
 // Full config:  https://github.com/axios/axios#request-config
 // axios.defaults.baseURL = process.env.baseURL || process.env.apiUrl || '';
@@ -17,7 +18,7 @@ const _axios = axios.create(config)
 _axios.interceptors.request.use(
   function(config) {
     // Do something before request is sent
-    config.loading && Message.loading()
+    config.loading && Loading.show()
     return config
   },
   function(error) {
@@ -28,14 +29,15 @@ _axios.interceptors.request.use(
 
 // Add a response interceptor
 _axios.interceptors.response.use(
-  function(response) {
-    Message.closeLoading()
+  async function(response) {
+    response.config.loading && (await Loading.close())
     // Do something with response data
     let data = response.data
     return data
   },
-  function(error) {
-    Message.closeLoading()
+  async function(error) {
+    // 任一请求出错，关闭 loading 动画
+    await Loading.close()
     // Do something with response error
     return Promise.reject(error)
   }

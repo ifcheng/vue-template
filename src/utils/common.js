@@ -52,3 +52,17 @@ export function throttle(handler, interval) {
     }
   }
 }
+
+/**
+ * 用于生成判断特定数据类型的函数
+ * @param {String} type 数据类型
+ * @returns {Function}
+ */
+export function isType(type) {
+  return function(val) {
+    // eslint-disable-next-line
+    return Object.toString.call(val).slice(8, -1).toLowerCase === type.toLowerCase
+  }
+}
+
+export const isObject = isType('object')

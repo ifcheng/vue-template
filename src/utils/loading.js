@@ -6,6 +6,9 @@ let lockClose = false
 
 // 延迟显示加载效果的时间（防止闪烁），ms
 const DELAY = 300
+const OPTIONS = {
+  lock: true
+}
 
 export default {
   instance: null,
@@ -14,7 +17,7 @@ export default {
     if (lockShow) return
     lockShow = true
     timer = window.setTimeout(() => {
-      this.instance = Loading.service({ lock: true })
+      this.instance = Loading.service(OPTIONS)
       start = Date.now()
     }, DELAY)
   },

@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Message from './message'
+import Loading from './loading'
 
 Object.defineProperties(Vue.prototype, {
   $message: {
@@ -10,5 +11,8 @@ Object.defineProperties(Vue.prototype, {
   },
   $confirm: {
     get: () => Message.confirm
+  },
+  $loading: {
+    get: () => Loading
   }
 })

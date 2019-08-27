@@ -18,7 +18,6 @@ const _axios = axios.create(config)
 _axios.interceptors.request.use(
   function(config) {
     // Do something before request is sent
-    config.loading && Loading.show()
     return config
   },
   function(error) {
@@ -29,29 +28,33 @@ _axios.interceptors.request.use(
 
 // Add a response interceptor
 _axios.interceptors.response.use(
-  async function(response) {
-    response.config.loading && (await Loading.close())
+  function(response) {
     // Do something with response data
     let data = response.data
     return data
   },
-  async function(error) {
-    // 任一请求出错，关闭 loading 动画
-    await Loading.close()
+  function(error) {
     // Do something with response error
     return Promise.reject(error)
   }
 )
 
-export default function request(config) {
-  return _axios(config).catch(err => {
-    if (config.errMsg !== false) {
-      // 可定制错误提示类型，默认为 alert
-      let type = config.messageType || 'alert'
-      Message[type](getErrMsg(err, config.errMsg))
-    }
-    return Promise.reject(err)
-  })
+export default function request(options) {
+  options.loading && Loading.show()
+  return _axios(options)
+    .then(async data => {
+      options.loading && (await Loading.close())
+      return data
+    })
+    .catch(async err => {
+      await Loading.close()
+      if (options.errMsg !== false) {
+        // 可定制错误提示类型，默认为 alert
+        let type = options.messageType || 'alert'
+        Message[type](getErrMsg(err, options.errMsg))
+      }
+      return Promise.reject(err)
+    })
 }
 
 export function getErrMsg(e, msg = '请求异常') {

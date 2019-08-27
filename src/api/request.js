@@ -28,12 +28,12 @@ _axios.interceptors.request.use(
 
 // Add a response interceptor
 _axios.interceptors.response.use(
-  async function(response) {
+  function(response) {
     // Do something with response data
     let data = response.data
     return data
   },
-  async function(error) {
+  function(error) {
     // Do something with response error
     return Promise.reject(error)
   }

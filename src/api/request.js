@@ -40,23 +40,23 @@ _axios.interceptors.response.use(
 )
 
 export default function request(options) {
-  options.loading && Loading.show()
+  // 解构属性均为自定义扩展属性
+  const { loading, loadingText, errMsg, messageType = 'error' } = options
+  loading && Loading.show(loadingText)
   return _axios(options)
     .then(async data => {
-      options.loading && (await Loading.close())
+      loading && (await Loading.close())
       return data
     })
     .catch(async err => {
       await Loading.close()
-      if (options.errMsg !== false) {
-        // 可定制错误提示类型，默认为 alert
-        let type = options.messageType || 'alert'
-        Message[type](getErrMsg(err, options.errMsg))
+      if (errMsg !== false) {
+        Message[messageType](getErrMsg(err, errMsg))
       }
       return Promise.reject(err)
     })
 }
 
-export function getErrMsg(e, msg = '请求异常') {
-  return e.message || msg
+export function getErrMsg(err, msg = '请求异常') {
+  return err.message || msg
 }
